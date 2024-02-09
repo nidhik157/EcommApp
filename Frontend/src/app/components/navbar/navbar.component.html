@@ -1,0 +1,100 @@
+<nav
+  style="background-color: #112d4e"
+  class="navbar navbar-expand-lg sticky-top"
+>
+  <div class="container-fluid">
+    <a class="navbar-brand text-white" routerLink="/">
+      <svg width="150" height="40">
+        <image
+          *ngIf="true"
+          xlink:href="/assets/logo.svg"
+          width="150"
+          height="40"
+        />
+      </svg>
+    </a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarScroll"
+      aria-controls="navbarScroll"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarScroll">
+      <ul
+        class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll"
+        style="--bs-scroll-height: 100px"
+      >
+        <li class="nav-item">
+          <a
+            class="nav-link active text-white"
+            aria-current="page"
+            routerLink="/"
+            >{{ isLoggedIn && !isCustomer ? "Dashboard" : "Home" }}</a
+          >
+        </li>
+      </ul>
+
+      <ul
+        class="navbar-nav ml-auto my-2 my-lg-0 navbar-nav-scroll"
+        style="--bs-scroll-height: 100px"
+      >
+        <li class="nav-item">
+          <button class="nav-link text-white" routerLink="/products">
+            Products
+          </button>
+        </li>
+        <li
+          class="nav-item"
+          [ngClass]="{
+            'me-3': totalQty > 0
+          }"
+          *ngIf="!isLoggedIn || isCustomer"
+        >
+          <button
+            class="nav-link text-white position-relative"
+            routerLink="/cart"
+          >
+            Cart
+            <span
+              *ngIf="totalQty > 0"
+              class="position-absolute translate-middle badge rounded-pill bg-danger"
+            >
+              {{ totalQty > 99 ? "99+" : totalQty }}
+              <span class="visually-hidden">unread messages</span>
+            </span>
+          </button>
+        </li>
+        <li class="nav-item" *ngIf="!isLoggedIn; else loggedIn">
+          <button class="nav-link text-white" routerLink="/login">Login</button>
+        </li>
+        <ng-template #loggedIn>
+          <li class="nav-item">
+            <button
+              *ngIf="isCustomer"
+              class="nav-link text-white"
+              routerLink="/orders"
+            >
+              Orders
+            </button>
+          </li>
+
+          <li class="nav-item">
+            <button class="nav-link text-white" routerLink="/user">
+              Profile
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link text-white" (click)="logout()">
+              Logout
+            </button>
+          </li>
+        </ng-template>
+      </ul>
+    </div>
+  </div>
+</nav>

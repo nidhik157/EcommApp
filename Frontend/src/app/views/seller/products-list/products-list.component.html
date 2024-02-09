@@ -1,0 +1,39 @@
+<div class="container mt-4">
+  <div>
+    <div class="row">
+      <div class="col-md-10">
+        <h2>Your products</h2>
+        <div class="mb-3">
+          <input
+            class="form-check-input custom-checkbox"
+            type="checkbox"
+            name="outOfStock"
+            (change)="toggleOutOfStock($event)"
+            aria-label="Checkbox for outOfStock"
+          />
+          <label for="outOfStock">Out of stock</label>
+        </div>
+      </div>
+      <div class="col-md-2 ml-auto">
+        <button class="btn btn-class" [routerLink]="['add']">
+          Add product
+        </button>
+      </div>
+    </div>
+    <div class="row row-cols-1 row-cols-md-3 g-4 mt-3">
+      <app-card
+        *ngFor="let prod of sellerProducts?.docs"
+        [product]="prod"
+      ></app-card>
+    </div>
+    <app-pagination
+      [totalItems]="sellerProducts.totalDocs || 0"
+      [page]="sellerProducts.page || 1"
+      (pageChange)="pageChanged($event)"
+    ></app-pagination>
+  </div>
+
+  <div *ngIf="!sellerProducts?.totalDocs">
+    <h2 class="text-center mt-5">No products to display</h2>
+  </div>
+</div>

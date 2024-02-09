@@ -1,0 +1,26 @@
+<div class="container mt-4">
+  <app-searchbar
+    (sortOption)="sortOption($event)"
+    (enteredSearch)="enteredSearch($event)"
+  ></app-searchbar>
+  <div class="my-3"></div>
+  <app-filterbar (changer)="changer($event)"></app-filterbar>
+  <div
+    class="row row-cols-1 row-cols-md-3 g-4 mt-3"
+    *ngIf="products.totalDocs > 0; else noProducts"
+  >
+    <app-card *ngFor="let prod of products?.docs" [product]="prod"></app-card>
+  </div>
+
+  <ng-template #noProducts>
+    <div class="text-center mt-5">
+      <h3>No products found</h3>
+    </div>
+  </ng-template>
+
+  <app-pagination
+    [totalItems]="products.totalDocs || 0"
+    [page]="products.page || 1"
+    (pageChange)="this.getProducts({ page: $event })"
+  ></app-pagination>
+</div>

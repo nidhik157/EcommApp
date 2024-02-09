@@ -1,0 +1,117 @@
+<div class="container mt-4">
+  <div class="nav nav-tabs">
+    <div class="nav-item">
+      <button
+        [ngClass]="
+          role === 'customer'
+            ? 'nav-link active text-black'
+            : 'nav-link text-black'
+        "
+        (click)="toggleState('customer')"
+        [disabled]="role === 'customer'"
+      >
+        Customer
+      </button>
+    </div>
+    <div class="nav-item">
+      <button
+        [ngClass]="
+          role === 'seller'
+            ? 'nav-link active text-black'
+            : 'nav-link text-black'
+        "
+        (click)="toggleState('seller')"
+        [disabled]="role === 'seller'"
+      >
+        Seller
+      </button>
+    </div>
+    <div class="nav-item">
+      <button
+        [ngClass]="
+          role === 'admin'
+            ? 'nav-link active text-black'
+            : 'nav-link text-black'
+        "
+        (click)="toggleState('admin')"
+        [disabled]="role === 'admin'"
+      >
+        Admin
+      </button>
+    </div>
+  </div>
+  <table class="table table-striped text-center">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">username</th>
+        <th scope="col">Email</th>
+        <th scope="col">Registered On</th>
+        <th scope="col" *ngIf="role === 'seller'">Current Role</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of tableData; index as i">
+        <th scope="row">
+          {{ ((users?.page || 1) - 1) * (users?.limit || 10) + i + 1 }}
+        </th>
+        <td>{{ data.firstName }} {{ data.lastName }}</td>
+
+        <td>
+          {{ data.username }}
+        </td>
+        <td>
+          {{ data.email }}
+        </td>
+        <td>
+          {{ parseDate(data.createdAt || "") }}
+        </td>
+        <td *ngIf="role === 'seller'">
+          {{ data.role }}
+        </td>
+        <td>
+          <ng-container *ngIf="data.username === 'admin'; else AdminTemplate">
+            Super Admin
+          </ng-container>
+
+          <ng-template #AdminTemplate>
+            <ng-container
+              *ngIf="currentUserId === data._id; else buttonTemplate"
+            >
+              You
+            </ng-container>
+
+            <ng-template #buttonTemplate>
+              <button
+                type="button"
+                class="btn btn-class mx-2"
+                [routerLink]="['/user', data._id]"
+              >
+                View
+              </button>
+              <button
+                type="button"
+                [ngClass]="
+                  data.isActive
+                    ? 'btn btn-outline-danger'
+                    : 'btn btn-outline-success'
+                "
+                (click)="toggleUserStatus(data, data.isActive)"
+              >
+                {{ data.isActive ? "Disable" : "Enable" }}
+              </button>
+            </ng-template>
+          </ng-template>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <app-pagination
+    [totalItems]="users?.totalDocs || 0"
+    [page]="users?.page || 1"
+    (pageChange)="pageChange($event)"
+  ></app-pagination>
+</div>

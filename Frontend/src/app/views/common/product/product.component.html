@@ -1,0 +1,147 @@
+<div class="container my-4">
+  <div class="card">
+    <div class="row no-gutters m-5">
+      <div class="col-md-6" style="margin-top: 10%">
+        <div *ngIf="(product?.images)!.length > 0">
+          <app-carousel [slides]="product?.images || []"></app-carousel>
+        </div>
+        <div *ngIf="(product?.images)!.length === 0">
+          <app-carousel [slides]="slides"></app-carousel>
+        </div>
+      </div>
+      <div class="col-md-6 my-5 mt-5">
+        <h3>{{ product?.title }}</h3>
+        <p>{{ product?.description }}</p>
+        <div class="row">
+          <div class="col-md-4">
+            <h4>
+              <span>{{ product?.price || 0 | rupeeFormat }}</span>
+            </h4>
+          </div>
+          <div class="col mt-1">
+            {{ product?.avgRating | number : "1.1-1" || 0 }}
+
+            <app-rating
+              [rating]="product?.avgRating || 0"
+              [wantHalfStar]="true"
+            ></app-rating>
+          </div>
+        </div>
+        <h6 *ngIf="product?.stock === 0; else NotOutOfStock" style="color: red">
+          This product is currently out of stock
+        </h6>
+        <ng-template #NotOutOfStock>
+          <p
+            style="color: red"
+            *ngIf="!isSellerByRole && !isAdmin && product!.stock < 6"
+          >
+            Hurry, only {{ product!.stock }}
+            {{ product!.stock === 1 ? "item" : "items" }} left !!
+          </p>
+          <p *ngIf="isSellerByRole || isAdmin">
+            <strong>Items in Stock:</strong> {{ product?.stock }}
+          </p>
+        </ng-template>
+
+        <div class="action">
+          <button
+            class="btn btn-class mt-1"
+            *ngIf="
+              !isSellerByRole &&
+              !currentSeller &&
+              !isAdmin &&
+              product &&
+              product.stock > 0
+            "
+            type="button"
+            (click)="
+              toggleCart(product._id || '', !addedProducts[product._id || ''])
+            "
+          >
+            {{
+              !addedProducts[product._id || ""]
+                ? "Add to cart"
+                : "Remove from cart"
+            }}
+          </button>
+          <button
+            class="btn btn-class mt-1 mx-3"
+            *ngIf="
+              !isSellerByRole &&
+              !currentSeller &&
+              !isAdmin &&
+              product &&
+              product.stock > 0
+            "
+            type="button"
+            (click)="buyNow()"
+          >
+            Buy Now
+          </button>
+          <button
+            class="btn btn-class mt-1 mx-2"
+            (click)="editProduct()"
+            *ngIf="isSellerByRole && currentSeller"
+            type="button"
+          >
+            Edit
+          </button>
+          <button
+            class="btn btn-class mt-1 mx-2"
+            (click)="deleteProduct()"
+            *ngIf="isSellerByRole && currentSeller"
+            type="button"
+          >
+            Delete
+          </button>
+        </div>
+        <br />
+        <table *ngIf="checkObj(product?.specifications)" class="table my-2">
+          <tbody>
+            <thead>
+              <tr>
+                <th style="font-size: larger">Specifications</th>
+              </tr>
+            </thead>
+            <tr *ngFor="let spec of objectKeys(product?.specifications)">
+              <th scope="row">{{ spec.key }}</th>
+              <td>{{ spec.value }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div *ngIf="product?.feedbacks?.length" class="row container pb-2">
+      <h4>Top Reviews</h4>
+      <div
+        class="d-flex"
+        style="flex-wrap: wrap; justify-content: space-between"
+      >
+        <div
+          class="col-md-6 card mb-3"
+          style="width: 48%"
+          *ngFor="let feedback of product?.feedbacks"
+        >
+          <div class="card-header">
+            <div class="row">
+              <div class="col">
+                <strong>{{ feedback.userId.username }}</strong>
+              </div>
+              <div class="col text-end" style="padding-right: 0.5vw">
+                <app-rating [rating]="feedback.rating"></app-rating>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <p class="card-text">
+              {{ feedback.comment }}
+            </p>
+          </div>
+          <div class="text-muted text-end me-3">
+            ~ {{ feedback.createdAt | date : "mediumDate" }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

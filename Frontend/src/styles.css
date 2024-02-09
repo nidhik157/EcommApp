@@ -1,0 +1,33 @@
+@import "~bootstrap/dist/css/bootstrap.min.css";
+body {
+  width: 100%;
+  background-color: #f9f7f7;
+
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.btn-class {
+  border-color: #112d4e;
+  color: #112d4e;
+}
+.btn-class:hover {
+  background-color: #112d4e;
+  color: #fff;
+}
+
+.content {
+  margin: 8%;
+  background-color: #f9f7f7;
+  padding: 4rem 1rem 4rem 1rem;
+  box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.05);
+}
+
+@media (prefers-color-scheme: dark) {
+  link[rel="icon"] {
+    href: "/assets/dark-favicon.ico";
+  }
+}
